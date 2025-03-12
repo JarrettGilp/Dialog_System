@@ -1,35 +1,37 @@
 import os
-import requests
+import subprocess
 import matplotlib.pyplot as plt
+from datetime import datetime
 
 # Ensure the graphs directory exists
 os.makedirs("Graphs", exist_ok=True)
 
-# GitHub Repo Info
-OWNER = "JarrettGilp"
-REPO = "Dialog_System"
-API_URL = f"https://api.github.com/repos/{OWNER}/{REPO}/stats/commit_activity"
+# Fetch commits from the Git history using git log
+git_log_command = "git log --since='1 year ago' --pretty=format:'%ad' --date=short"
+commit_dates = subprocess.check_output(git_log_command, shell=True).decode().splitlines()
 
-# Fetch commit data from GitHub API
-response = requests.get(API_URL)
-if response.status_code != 200:
-    print("Error fetching commit data")
-    exit()
+# Convert commit dates to weeks
+week_dates = [datetime.strptime(date, "%Y-%m-%d").isocalendar()[1] for date in commit_dates]
 
-data = response.json()
+# Count commits per week
+commit_counts = {}
+for week in week_dates:
+    if week not in commit_counts:
+        commit_counts[week] = 0
+    commit_counts[week] += 1
 
-# Extract weekly commit counts
-weeks = [week["week"] for week in data]
-commits = [week["total"] for week in data]
+# Prepare data for plotting
+weeks = sorted(commit_counts.keys())
+commits = [commit_counts[week] for week in weeks]
 
 # Plot graph
 plt.figure(figsize=(10, 5))
 plt.plot(weeks, commits, marker='o', linestyle='-', color='b', label="Commits per Week")
-plt.xlabel("Weeks (Unix Timestamp)")
+plt.xlabel("Weeks")
 plt.ylabel("Number of Commits")
-plt.title(f"Commit Activity for {OWNER}/{REPO}")
+plt.title("Commit Activity Over Time")
 plt.legend()
 plt.grid(True)
 
-# Save graph in the graphs folder
+# Save graph
 plt.savefig("Graphs/commit_graph.png")
