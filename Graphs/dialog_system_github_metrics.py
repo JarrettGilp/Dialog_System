@@ -23,6 +23,7 @@ headers = {
 response = requests.get(API_URL, headers=headers)
 if response.status_code != 200:
     print(f"Error fetching commit data: {response.status_code}")
+    print(response.content)
     exit()
 
 data = response.json()
