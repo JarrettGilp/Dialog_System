@@ -32,4 +32,4 @@ plt.legend()
 plt.grid(True)
 
 # Save graph in the graphs folder
-plt.savefig("graphs/commit_graph.png")
+plt.savefig("Graphs/commit_graph.png")
