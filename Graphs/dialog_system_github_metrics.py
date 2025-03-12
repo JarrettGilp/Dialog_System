@@ -22,7 +22,7 @@ headers = {
 # Fetch commit data from GitHub API
 response = requests.get(API_URL, headers=headers)
 if response.status_code != 200:
-    print("Error fetching commit data: {response.status_code}")
+    print(f"Error fetching commit data: {response.status_code}")
     exit()
 
 data = response.json()
