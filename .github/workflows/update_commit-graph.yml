@@ -21,7 +21,7 @@ jobs:
         run: pip install requests matplotlib
 
       - name: Generate Commit Graph
-        run: python generate_commit_graph.py
+        run: python Graphs/dialog_system_github_metrics.py
 
       - name: Commit and Push Changes
         run: |
