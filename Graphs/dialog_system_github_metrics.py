@@ -3,7 +3,7 @@ import requests
 import matplotlib.pyplot as plt
 
 # Ensure the graphs directory exists
-os.makedirs("graphs", exist_ok=True)
+os.makedirs("Graphs", exist_ok=True)
 
 # GitHub Repo Info
 OWNER = "JarrettGilp"
