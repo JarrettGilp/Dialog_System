@@ -1,3 +1,4 @@
 # Dialog_System
 
-![GitHub Activity Graph](https://github-readme-activity-graph.vercel.app/graph?username=JarrettGilp&theme=github)
+## 📊 Commit Activity
+![Commit Graph](graphs/commit_graph.png)
