@@ -1,7 +1,10 @@
+# Inside dialog_system_github_metrics.py
 import os
 import requests
 import matplotlib.pyplot as plt
 import datetime
+
+print("Starting to generate the commit graph...")
 
 # Ensure the graphs directory exists
 os.makedirs("Graphs", exist_ok=True)
@@ -11,19 +14,10 @@ OWNER = "JarrettGilp"
 REPO = "Dialog_System"
 API_URL = f"https://api.github.com/repos/{OWNER}/{REPO}/stats/commit_activity"
 
-# Get the GitHub token from the environment variable (set in GitHub Actions Secrets)
-GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
-
-# Headers for authentication
-headers = {
-    "Authorization": f"token {GITHUB_TOKEN}"
-}
-
 # Fetch commit data from GitHub API
-response = requests.get(API_URL, headers=headers)
+response = requests.get(API_URL)
 if response.status_code != 200:
-    print(f"Error fetching commit data: {response.status_code}")
-    print(response.content)
+    print("Error fetching commit data")
     exit()
 
 data = response.json()
@@ -57,4 +51,14 @@ plt.grid(True)
 
 # Save graph in the Graphs folder
 plt.tight_layout()  # Adjust layout to prevent overlap
+
+# Print statement for debugging
+print("Saving graph to 'Graphs/commit_graph.png'...")
+
 plt.savefig("Graphs/commit_graph.png")
+
+# Confirm if the image is saved
+if os.path.exists("Graphs/commit_graph.png"):
+    print("Graph saved successfully.")
+else:
+    print("Failed to save graph.")
