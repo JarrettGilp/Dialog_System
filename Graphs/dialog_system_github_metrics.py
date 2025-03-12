@@ -43,4 +43,9 @@ plt.xlabel("Days")
 plt.ylabel("Number of Commits")
 plt.title(f"Commit Activity for {OWNER}/{REPO} (Last 7 Days)")
 plt.xticks(rotation=45)  # Rotate x-axis labels for better readability
-plt.leg
+plt.legend()
+plt.grid(True)
+
+# Save graph in the Graphs folder
+plt.tight_layout()  # Adjust layout to prevent overlap
+plt.savefig("Graphs/commit_graph.png")
