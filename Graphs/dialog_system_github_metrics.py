@@ -11,6 +11,14 @@ OWNER = "JarrettGilp"
 REPO = "Dialog_System"
 API_URL = f"https://api.github.com/repos/{OWNER}/{REPO}/stats/commit_activity"
 
+# Get the GitHub token from the environment variable (set in GitHub Actions Secrets)
+GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
+
+# Headers for authentication
+headers = {
+    "Authorization": f"token {GITHUB_TOKEN}"
+}
+
 # Fetch commit data from GitHub API
 response = requests.get(API_URL)
 if response.status_code != 200:
