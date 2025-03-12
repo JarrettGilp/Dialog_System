@@ -1,0 +1,32 @@
+name: Update Commit Graph
+
+on:
+  schedule:
+    - cron: '0 0 * * 1'  # Runs every Monday
+  workflow_dispatch:  # Allows manual runs
+
+jobs:
+  update-graph:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.x'
+
+      - name: Install Dependencies
+        run: pip install requests matplotlib
+
+      - name: Generate Commit Graph
+        run: python generate_commit_graph.py
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'actions@github.com'
+          git add Graphs/commit_graph.png
+          git commit -m "Updated commit graph"
+          git push
