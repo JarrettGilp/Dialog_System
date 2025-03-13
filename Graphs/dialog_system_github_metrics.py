@@ -11,7 +11,30 @@ os.makedirs("Graphs", exist_ok=True)
 # GitHub Repo Info
 OWNER = "JarrettGilp"
 REPO = "Dialog_System"
+
+##############################
+# Get today's date in UTC (format: YYYY-MM-DDT00:00:00Z)
+today = datetime.datetime.utcnow().strftime('%Y-%m-%dT00:00:00Z')
+API_URL = f"https://api.github.com/repos/{OWNER}/{REPO}/commits?since={today}"
+
+# Fetch commits
+response = requests.get(API_URL)
+
+if response.status_code == 200:
+    commits = response.json()
+    if commits:
+        print(f"Total commits today: {len(commits)}")
+        for commit in commits:
+            print(commit["commit"]["author"]["date"], "-", commit["commit"]["message"])
+    else:
+        print("No commits found for today.")
+else:
+    print(f"Error fetching commits: {response.status_code}, {response.text}")
+
+####################################
+"""
 API_URL = f"https://api.github.com/repos/{OWNER}/{REPO}/stats/commit_activity"
+
 
 # Fetch commit data from GitHub API
 response = requests.get(API_URL)
@@ -62,3 +85,4 @@ if os.path.exists("Graphs/commit_graph.png"):
     print("Graph saved successfully.")
 else:
     print("Failed to save graph.")
+"""
