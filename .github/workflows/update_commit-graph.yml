@@ -2,13 +2,13 @@ name: Update Commit Graph
 
 on:
   schedule:
-    - cron: '0 0 * * 0'  # Runs every Monday
+    - cron: '0 0 * * 0'  # Runs every Sunday
   workflow_dispatch:  # Allows manual runs
 
 jobs:
   update-graph:
     runs-on: ubuntu-latest
-    environment: commit-approval
+    environment: commit-approval  # Requires approval before committing
 
     steps:
       - name: Checkout Repository
@@ -25,33 +25,21 @@ jobs:
       - name: Generate Commit Graph
         run: python Graphs/dialog_system_github_metrics.py
 
+      - name: Pull Latest Changes (Prevent Conflicts)
+        run: git pull --rebase origin main || true
+
       - name: List files in Graphs directory
-        run: |
-            echo "Listing files in the Graphs directory"
-            ls -l Graphs/
+        run: ls -l Graphs/
 
-      # Manual approval before commit and push
-      - name: Request approval before committing changes
-        if: success()  # Only request approval if previous steps succeeded
-        run: |
-          echo "Waiting for approval to commit changes"
-        env:
-          name: commit-approval  # Specify the protected environment here
-
-      # Commit and Push Changes (after approval)
       - name: Commit and Push Changes
-        if: success()  # Only run if approval is granted
         run: |
           git config --global user.name 'github-actions'
           git config --global user.email 'actions@github.com'
-          # Check if the graph image exists
           if [ -f "Graphs/todays_commit_graph.png" ]; then
-            git add Graphs/todays_commit_graph.png
-            git commit -m "Updated commit graph"
+            git add Graphs/todays_commit_graph.png --force
+            git add README.md --force  # Include README if needed
+            git commit -m "Auto-update commit graph"
             git push
           else
             echo "No new commit graph image generated, skipping commit."
           fi
-        env:
-          name: commit-approval  # Ensure the same environment for the commit step
-
