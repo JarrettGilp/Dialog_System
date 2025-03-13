@@ -14,6 +14,9 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
+      - name: Pull latest changes before modifications
+        run: git pull --rebase origin main || true
+
       - name: Set up Python
         uses: actions/setup-python@v3
         with:
@@ -24,9 +27,6 @@ jobs:
 
       - name: Generate Commit Graph
         run: python Graphs/dialog_system_github_metrics.py
-
-      - name: Pull Latest Changes (Prevent Conflicts)
-        run: git pull --rebase origin main || true
 
       - name: List files in Graphs directory
         run: ls -l Graphs/
@@ -43,3 +43,4 @@ jobs:
           else
             echo "No new commit graph image generated, skipping commit."
           fi
+
