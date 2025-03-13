@@ -8,6 +8,7 @@ on:
 jobs:
   update-graph:
     runs-on: ubuntu-latest
+    environment: commit-approval
 
     steps:
       - name: Checkout Repository
