@@ -1,4 +1,4 @@
 # Dialog_System
 
 ## 📊 Commit Activity
-![Commit Graph](Graphs/commit_graph.png)
+![Commit Graph](Graphs/todays_commit_graph.png)
