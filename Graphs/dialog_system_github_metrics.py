@@ -46,7 +46,7 @@ plt.figure(figsize=(10, 5))
 plt.bar(hours, commit_hours, color='blue', label="Commits per Hour")
 plt.xlabel("Hour of the Day (UTC)")
 plt.ylabel("Number of Commits")
-plt.title(f"Commit Activity for {OWNER}/{REPO} (Today)")
+plt.title(f"Commit Activity for {REPO} (Today)")
 plt.xticks(hours)  # Show every hour on x-axis
 plt.legend()
 plt.grid(True)
