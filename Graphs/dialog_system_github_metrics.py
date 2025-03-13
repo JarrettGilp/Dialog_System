@@ -13,23 +13,55 @@ OWNER = "JarrettGilp"
 REPO = "Dialog_System"
 
 ##############################
-# Get today's date in UTC (format: YYYY-MM-DDT00:00:00Z)
+
+# Get today's date in UTC and format it for the GitHub API
 today = datetime.datetime.utcnow().strftime('%Y-%m-%dT00:00:00Z')
 API_URL = f"https://api.github.com/repos/{OWNER}/{REPO}/commits?since={today}"
 
-# Fetch commits
+# Fetch commit data from GitHub API
 response = requests.get(API_URL)
+if response.status_code != 200:
+    print(f"Error fetching commit data: {response.status_code}, {response.text}")
+    exit()
 
-if response.status_code == 200:
-    commits = response.json()
-    if commits:
-        print(f"Total commits today: {len(commits)}")
-        for commit in commits:
-            print(commit["commit"]["author"]["date"], "-", commit["commit"]["message"])
-    else:
-        print("No commits found for today.")
+commits = response.json()
+
+# Check if there are any commits today
+if not commits:
+    print("No commits found for today.")
+    exit()
+
+# Group commits by hour
+commit_hours = [0] * 24  # Initialize array for 24 hours (midnight to 11 PM)
+for commit in commits:
+    commit_time = commit["commit"]["author"]["date"]  # ISO format timestamp
+    commit_hour = datetime.datetime.fromisoformat(commit_time[:-1]).hour  # Extract hour
+    commit_hours[commit_hour] += 1  # Increment commit count for the hour
+
+# Generate x-axis labels (0-23 hours)
+hours = list(range(24))
+
+# Plot graph
+plt.figure(figsize=(10, 5))
+plt.bar(hours, commit_hours, color='blue', label="Commits per Hour")
+plt.xlabel("Hour of the Day (UTC)")
+plt.ylabel("Number of Commits")
+plt.title(f"Commit Activity for {OWNER}/{REPO} (Today)")
+plt.xticks(hours)  # Show every hour on x-axis
+plt.legend()
+plt.grid(True)
+
+# Save graph
+plt.tight_layout()
+plt.savefig("Graphs/todays_commit_graph.png")
+print("Graph saved to 'Graphs/todays_commit_graph.png'.")
+
+# Confirm if the image is saved
+if os.path.exists("Graphs/todays_commit_graph.png"):
+    print("Graph saved successfully.")
 else:
-    print(f"Error fetching commits: {response.status_code}, {response.text}")
+    print("Failed to save graph.")
+
 
 ####################################
 """
