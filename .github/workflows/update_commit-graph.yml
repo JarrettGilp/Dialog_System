@@ -1,47 +1,47 @@
-#
-#name: Update Commit Graph
 
-#on:
-#  schedule:
-#    - cron: '0 0 * * 0'  # Runs every Sunday
-#  workflow_dispatch:  # Allows manual runs
+name: Update Commit Graph
 
-# jobs:
-#   update-graph:
-#     runs-on: ubuntu-latest
-#     environment: commit-approval  # Requires approval before committing
+on:
+ schedule:
+   - cron: '0 0 * * 0'  # Runs every Sunday
+ workflow_dispatch:  # Allows manual runs
 
-#     steps:
-#       - name: Checkout Repository
-#         uses: actions/checkout@v3
+jobs:
+  update-graph:
+    runs-on: ubuntu-latest
+    environment: commit-approval  # Requires approval before committing
 
-#       - name: Pull latest changes before modifications
-#         run: git pull --rebase origin main || true
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
 
-#       - name: Set up Python
-#         uses: actions/setup-python@v3
-#         with:
-#           python-version: '3.x'
+      - name: Pull latest changes before modifications
+        run: git pull --rebase origin main || true
 
-#       - name: Install Dependencies
-#         run: pip install requests matplotlib
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.x'
 
-#       - name: Generate Commit Graph
-#         run: python Graphs/dialog_system_github_metrics.py
+      - name: Install Dependencies
+        run: pip install requests matplotlib
 
-#       - name: List files in Graphs directory
-#         run: ls -l Graphs/
+      - name: Generate Commit Graph
+        run: python Graphs/dialog_system_github_metrics.py
 
-#       - name: Commit and Push Changes
-#         run: |
-#           git config --global user.name 'github-actions'
-#           git config --global user.email 'actions@github.com'
-#           if [ -f "Graphs/todays_commit_graph.png" ]; then
-#             git add Graphs/todays_commit_graph.png --force
-#             git add README.md --force  # Include README if needed
-#             git commit -m "Auto-update commit graph"
-#             git push
-#           else
-#             echo "No new commit graph image generated, skipping commit."
-#           fi
+      - name: List files in Graphs directory
+        run: ls -l Graphs/
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'actions@github.com'
+          if [ -f "Graphs/todays_commit_graph.png" ]; then
+            git add Graphs/todays_commit_graph.png --force
+            git add README.md --force  # Include README if needed
+            git commit -m "Auto-update commit graph"
+            git push
+          else
+            echo "No new commit graph image generated, skipping commit."
+          fi
 
